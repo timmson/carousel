@@ -44,7 +44,7 @@ export function ParticipantTable({
             + Добавить
           </button>
           <button type="button" className={styles.btnDanger} onClick={handleClear} disabled={disabled || participants.length === 0}>
-            Очистить всё
+            Очистить
           </button>
         </div>
       </div>

@@ -37,15 +37,6 @@ export function useParticipants(): ParticipantsApi {
 
   const load = useCallback(
     (parsed: ParsedParticipant[]): LoadResult => {
-      const emails = new Set(
-        participants.map((participant) => normalizeEmail(participant.email)).filter(Boolean),
-      );
-      const names = new Set(
-        participants
-          .map((participant) => participant.name.trim().toLowerCase())
-          .filter(Boolean),
-      );
-
       const result: LoadResult = { added: 0, skipped: 0 };
       const appended: Participant[] = [];
 
@@ -53,20 +44,7 @@ export function useParticipants(): ParticipantsApi {
         const email = normalizeEmail(item.email);
         const name = item.name.trim();
 
-        if (email) {
-          if (emails.has(email)) {
-            result.skipped += 1;
-            continue;
-          }
-          emails.add(email);
-        } else if (name) {
-          const key = name.toLowerCase();
-          if (names.has(key)) {
-            result.skipped += 1;
-            continue;
-          }
-          names.add(key);
-        } else {
+        if (!email && !name) {
           result.skipped += 1;
           continue;
         }
@@ -75,13 +53,12 @@ export function useParticipants(): ParticipantsApi {
         result.added += 1;
       }
 
-      if (appended.length > 0) {
-        setParticipants((current) => [...current, ...appended]);
-      }
+      // Новый список заменяет старый — предыдущие участники удаляются.
+      setParticipants(appended);
 
       return result;
     },
-    [participants],
+    [],
   );
 
   const addEmpty = useCallback(() => {

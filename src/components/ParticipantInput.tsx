@@ -25,22 +25,14 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
 
   const handleLoad = () => {
     const parsed = parseParticipants(text);
-    const { added, skipped } = onLoad(parsed);
+    onLoad(parsed);
 
     if (parsed.length === 0) {
       setFeedback('Не удалось распознать ни одного участника. Проверьте формат списка.');
       return;
     }
 
-    if (added === 0) {
-      setFeedback(`Все ${skipped} ${plural(skipped, 'запись', 'записи', 'записей')} уже есть в списке.`);
-      return;
-    }
-
-    setFeedback(
-      `Добавлено: ${added} ${plural(added, 'участник', 'участника', 'участников')}` +
-        (skipped > 0 ? `, пропущено дубликатов: ${skipped}.` : '.'),
-    );
+    setFeedback(`Добавлено: ${parsed.length} ${plural(parsed.length, 'участник', 'участника', 'участников')}.`);
   };
 
   return (
