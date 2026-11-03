@@ -84,6 +84,10 @@ export interface WheelProps {
   isSpinning: boolean;
   /** Вызывается, когда анимация вращения реально завершилась. */
   onSpinEnd?: () => void;
+  /** Вызывается при клике на колесо. */
+  onSpin?: () => void;
+  /** Сообщение, которое показывается вместо кнопки. */
+  message?: string;
 }
 
 export const Wheel = memo(function Wheel({
@@ -92,8 +96,11 @@ export const Wheel = memo(function Wheel({
   spinDuration,
   isSpinning,
   onSpinEnd,
+  onSpin,
+  message,
 }: WheelProps) {
   const count = participants.length;
+  const canSpin = count >= 2 && !isSpinning;
 
   return (
     <div className={styles.stage}>
@@ -105,14 +112,23 @@ export const Wheel = memo(function Wheel({
       </div>
 
       <svg
-        className={styles.svg}
+        className={`${styles.svg} ${canSpin ? styles.svgClickable : ''}`}
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        role="img"
+        role={canSpin ? 'button' : 'img'}
         aria-label={
           count > 0
-            ? `Колесо выбора: ${count} ${count === 1 ? 'участник' : 'участников'}`
+            ? `Колесо выбора: ${count} ${count === 1 ? 'участник' : 'участников'}` +
+              (canSpin ? '. Нажмите, чтобы крутить' : '')
             : 'Колесо выбора: список участников пуст'
         }
+        onClick={onSpin}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onSpin?.();
+          }
+        }}
+        tabIndex={canSpin ? 0 : -1}
       >
         <circle className={styles.rim} cx={CENTER} cy={CENTER} r={CENTER - 1} />
 
@@ -157,6 +173,12 @@ export const Wheel = memo(function Wheel({
           </text>
         </g>
       </svg>
+
+      {message ? (
+        <p className={styles.hint} role={isSpinning ? undefined : 'status'}>
+          {message}
+        </p>
+      ) : null}
     </div>
   );
 });

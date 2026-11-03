@@ -63,29 +63,17 @@ export function App() {
                 spinDuration={spinDuration}
                 isSpinning={isSpinning}
                 onSpinEnd={finish}
+                onSpin={handleSpin}
+                message={
+                  isSpinning
+                    ? 'Крутится…'
+                    : showTooFew
+                      ? 'Для выбора нужен ещё как минимум один участник.'
+                      : showInstruction
+                        ? 'Добавьте участников, чтобы крутить колесо.'
+                        : ''
+                }
               />
-
-              <button
-                type="button"
-                className={styles.spinButton}
-                onClick={handleSpin}
-                disabled={!canSpin}
-                aria-busy={isSpinning}
-              >
-                {isSpinning ? 'Крутится…' : 'КРУТИТЬ!'}
-              </button>
-
-              {showInstruction ? (
-                <p className={styles.note}>
-                  Добавьте минимум двух участников — и колесо оживет.
-                </p>
-              ) : null}
-
-              {showTooFew ? (
-                <p className={styles.warning} role="alert">
-                  Для выбора нужен хотя бы один дополнительный участник.
-                </p>
-              ) : null}
 
               {error ? (
                 <p className={styles.warning} role="alert">
