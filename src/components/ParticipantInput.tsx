@@ -40,10 +40,6 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
       <h2 id="participants-input-title" className={styles.title}>
         1. Скопируй участников
       </h2>
-      <p className={styles.hint}>
-        Вставьте список, скопированный из Outlook: <code>ФИО 1 &lt;mail1@example.com&gt;; ФИО 2
-        &lt;mail2@example.com&gt;</code>. Подойдут также переводы строк и обычные запятые.
-      </p>
 
       <textarea
         className={styles.textarea}
