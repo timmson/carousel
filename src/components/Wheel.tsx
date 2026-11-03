@@ -1,6 +1,13 @@
 import { memo } from 'react';
 import type { Participant } from '../types';
-import { sectorColor, sliceAngle } from '../lib/wheel';
+import {
+  isLabelFlipped,
+  labelMaxLength,
+  labelRotation,
+  labelStartRadius,
+  sectorColor,
+  sliceAngle,
+} from '../lib/wheel';
 import { displayName, truncate } from '../lib/display';
 import styles from './Wheel.module.css';
 
@@ -8,6 +15,8 @@ const SIZE = 400;
 const CENTER = SIZE / 2;
 const RADIUS = CENTER - 6;
 const INNER_RADIUS = 52;
+/** Отступы рабочей зоны подписи: у обода и у внутренней границы секторов. */
+const LABEL_EDGE_MARGIN = 12;
 
 function pointAt(angleDeg: number, radius: number): { x: number; y: number } {
   const rad = (angleDeg * Math.PI) / 180;
@@ -46,17 +55,17 @@ const Sector = memo(function Sector({ participant, index, count }: SectorProps) 
   const color = sectorColor(index, count);
   const fontSize = fontSizeFor(count);
 
-  const available = RADIUS - INNER_RADIUS - 14;
-  const maxChars = Math.max(4, Math.floor(available / (fontSize * 0.56)));
+  const labelEnd = RADIUS - LABEL_EDGE_MARGIN;
+  const startRadius = labelStartRadius(INNER_RADIUS, count, fontSize);
+  const maxChars = labelMaxLength(startRadius, labelEnd, fontSize);
   const full = displayName(participant);
   const label = truncate(full, maxChars);
 
-  // Текст идёт вдоль радиуса; в левой половине колеса переворачиваем его,
-  // чтобы надписи не оказывались вверх ногами.
-  const flipped = middle > 90 && middle < 270;
-  const anchorRadius = flipped ? RADIUS - 14 : INNER_RADIUS;
-  const origin = pointAt(middle, anchorRadius);
-  const direction = flipped ? 90 - middle + 180 : 90 - middle;
+  // start — якорь текста: у узкой части сектора для правой половины и у обода
+  // для левой, где подпись читается справа налево.
+  const flipped = isLabelFlipped(middle);
+  const origin = pointAt(middle, flipped ? labelEnd : startRadius);
+  const direction = labelRotation(middle);
 
   return (
     <g>

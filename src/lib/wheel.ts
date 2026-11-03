@@ -55,6 +55,40 @@ export function sectorAtPointer(rotation: number, count: number): number {
 }
 
 /**
+ * Подпись сектора идёт вдоль радиуса. Направление «наружу» для угла `middle`
+ * в экранных координатах (y вниз) — это (sin m, -cos m), а SVG `rotate(d)`
+ * поворачивает ось текста в (cos d, sin d): отсюда сдвиг ровно на 90°.
+ *
+ * Текст, направленный наружу, читается вверх ногами везде, где его ось смотрит
+ * влево, то есть при sin(m) < 0 — в нижней и верхней левой четвертях
+ * (180°…360°). Там разворачиваем подпись ещё на 180° и ставим якорь у обода:
+ * текст идёт от края к центру, но всегда остаётся прямым.
+ */
+export function isLabelFlipped(middle: number): boolean {
+  const normalised = ((middle % FULL_CIRCLE) + FULL_CIRCLE) % FULL_CIRCLE;
+  return normalised > 180 && normalised < FULL_CIRCLE;
+}
+
+export function labelRotation(middle: number): number {
+  return isLabelFlipped(middle) ? middle + 90 : middle - 90;
+}
+
+/**
+ * Радиус, от которого начинается подпись. У самой оси сектор слишком узкий и
+ * буквы залезали бы на соседние, поэтому стартуем там, где ширина сектора
+ * сравнивается с высотой строки.
+ */
+export function labelStartRadius(innerRadius: number, count: number, fontSize: number): number {
+  const sliceRad = sliceAngle(count) * (Math.PI / FULL_CIRCLE);
+  return Math.max(innerRadius + 8, (fontSize * 1.3) / sliceRad);
+}
+
+/** Сколько символов помещается между стартовым и конечным радиусом. */
+export function labelMaxLength(startRadius: number, endRadius: number, fontSize: number): number {
+  return Math.max(3, Math.floor((endRadius - startRadius) / (fontSize * 0.55)));
+}
+
+/**
  * Палитра строится по золотому сечению: цвета гарантированно различимы и
  * равномерно распределены по тону при любом количестве участников.
  */
