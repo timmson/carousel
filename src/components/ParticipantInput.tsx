@@ -74,7 +74,7 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
           onClick={handleLoad}
           disabled={disabled || text.trim().length === 0}
         >
-          Загрузить участников
+          Добавить участников
         </button>
         <button
           type="button"
@@ -85,7 +85,7 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
           }}
           disabled={disabled || text.length === 0}
         >
-          Очистить поле
+          Очистить
         </button>
       </div>
 
