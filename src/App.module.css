@@ -1,0 +1,129 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 520px at 12% -8%, #eef2ff 0%, rgba(238, 242, 255, 0) 60%),
+    radial-gradient(900px 480px at 92% 0%, #ecfeff 0%, rgba(236, 254, 255, 0) 55%),
+    #f6f7fb;
+  padding: 40px 20px 56px;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.column {
+  min-width: 0;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.cardTitle {
+  margin: 0 0 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  text-align: center;
+}
+
+.spinButton {
+  display: block;
+  width: 100%;
+  margin-top: 26px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #6d28d9);
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s, filter 0.2s;
+  box-shadow: 0 12px 26px -14px rgba(79, 70, 229, 0.85);
+}
+
+.spinButton:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.spinButton:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.spinButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.note {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #6b7280;
+}
+
+.warning {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+}
+
+.footer {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 0.83rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .column:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 24px 14px 40px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .spinButton {
+    font-size: 1.05rem;
+    padding: 15px 18px;
+  }
+}

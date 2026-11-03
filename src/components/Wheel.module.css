@@ -1,0 +1,90 @@
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.disc {
+  transform-origin: 50% 50%;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.12, 0.72, 0.06, 1);
+  transition-duration: 0ms;
+}
+
+.rim {
+  fill: none;
+  stroke: rgba(17, 24, 39, 0.12);
+  stroke-width: 2;
+}
+
+.innerShadow {
+  fill: none;
+  stroke: rgba(17, 24, 39, 0.08);
+  stroke-width: 1;
+}
+
+.label {
+  fill: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+  stroke: rgba(17, 24, 39, 0.22);
+  stroke-width: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hub {
+  pointer-events: none;
+}
+
+.hub circle:first-child {
+  fill: #ffffff;
+  filter: drop-shadow(0 2px 6px rgba(17, 24, 39, 0.22));
+}
+
+.hubInner {
+  fill: #eef2ff;
+}
+
+.hubIcon {
+  font-size: 30px;
+}
+
+.pointer {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  filter: drop-shadow(0 3px 6px rgba(17, 24, 39, 0.28));
+}
+
+.placeholder {
+  pointer-events: none;
+}
+
+.emptyDisc {
+  fill: #f3f4f6;
+}
+
+.emptyText {
+  font-size: 22px;
+  font-weight: 700;
+  fill: #6b7280;
+}
+
+.emptyHint {
+  font-size: 15px;
+  fill: #9ca3af;
+}
