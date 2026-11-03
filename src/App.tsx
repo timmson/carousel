@@ -11,7 +11,8 @@ import styles from './App.module.css';
 export function App() {
   const [text, setText] = useState('');
   const { participants, load, addEmpty, update, remove, clear } = useParticipants();
-  const { isSpinning, rotation, spinDuration, winner, spinId, error, spin, finish } = useSpin();
+  const { isSpinning, rotation, spinDuration, winner, spinId, error, spin, finish, reset } =
+    useSpin();
 
   // Колесо и выбор работают по одному и тому же списку: пустые строки таблицы
   // не должны создавать сектор без имени.
@@ -91,14 +92,6 @@ export function App() {
                   {error}
                 </p>
               ) : null}
-
-              <ResultCard
-                winner={winner}
-                visible={winner !== null && !isSpinning}
-                spinId={spinId}
-                onSpinAgain={handleSpin}
-                disabled={!canSpin}
-              />
             </section>
           </div>
         </div>
@@ -107,6 +100,15 @@ export function App() {
           Все данные обрабатываются в браузере и не покидают ваш компьютер.
         </footer>
       </div>
+
+      <ResultCard
+        winner={winner}
+        visible={winner !== null && !isSpinning}
+        spinId={spinId}
+        onSpinAgain={handleSpin}
+        onClose={reset}
+        disabled={!canSpin}
+      />
     </div>
   );
 }

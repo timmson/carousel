@@ -1,30 +1,68 @@
-.wrapper {
-  position: relative;
-  margin-top: 20px;
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out;
+  overflow: hidden;
 }
 
 .card {
   position: relative;
+  width: 100%;
+  max-width: 560px;
   text-align: center;
-  padding: 28px 24px;
-  border-radius: 18px;
+  padding: 40px 32px 34px;
+  border-radius: 22px;
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #db2777 100%);
   color: #ffffff;
-  box-shadow: 0 18px 40px -18px rgba(79, 70, 229, 0.7);
+  box-shadow: 0 30px 70px -20px rgba(17, 24, 39, 0.7);
   animation: pop 0.5s cubic-bezier(0.22, 1.4, 0.4, 1);
 }
 
-.eyebrow {
-  margin: 0 0 10px;
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.emoji {
+  margin: 0 0 12px;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.02em;
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
 .name {
   margin: 0;
-  font-size: clamp(1.5rem, 5vw, 2.15rem);
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -32,29 +70,36 @@
 }
 
 .email {
-  margin: 10px 0 0;
-  font-size: 0.95rem;
+  margin: 12px 0 0;
+  font-size: 0.98rem;
   opacity: 0.9;
   overflow-wrap: anywhere;
 }
 
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
 .again {
-  margin-top: 20px;
-  padding: 12px 26px;
+  padding: 13px 28px;
   border: none;
   border-radius: 999px;
   background: #ffffff;
   color: #4f46e5;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
-  box-shadow: 0 6px 16px -6px rgba(17, 24, 39, 0.45);
+  box-shadow: 0 8px 20px -8px rgba(17, 24, 39, 0.5);
 }
 
 .again:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 10px 22px -8px rgba(17, 24, 39, 0.5);
+  box-shadow: 0 12px 26px -10px rgba(17, 24, 39, 0.55);
 }
 
 .again:disabled {
@@ -62,10 +107,36 @@
   cursor: not-allowed;
 }
 
+.dismiss {
+  padding: 13px 26px;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.dismiss:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes pop {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(12px);
+    transform: scale(0.88) translateY(16px);
   }
   to {
     opacity: 1;
@@ -73,7 +144,18 @@
   }
 }
 
+@media (max-width: 560px) {
+  .card {
+    padding: 34px 20px 26px;
+  }
+
+  .emoji {
+    font-size: 38px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .overlay,
   .card {
     animation: none;
   }
