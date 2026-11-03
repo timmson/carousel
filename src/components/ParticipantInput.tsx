@@ -46,7 +46,7 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
   return (
     <section className={styles.card} aria-labelledby="participants-input-title">
       <h2 id="participants-input-title" className={styles.title}>
-        Участники встречи
+        1. Скопируй участников
       </h2>
       <p className={styles.hint}>
         Вставьте список, скопированный из Outlook: <code>ФИО 1 &lt;mail1@example.com&gt;; ФИО 2

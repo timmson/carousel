@@ -34,7 +34,7 @@ export function ParticipantTable({
     <section className={styles.card} aria-labelledby="table-title">
       <div className={styles.toolbar}>
         <h2 id="table-title" className={styles.title}>
-          Список участников{' '}
+          2. Отредактируй список{' '}
           <span className={styles.count} aria-live="polite">
             {participants.length}
           </span>
@@ -60,7 +60,6 @@ export function ParticipantTable({
               <tr>
                 <th className={styles.th} scope="col">№</th>
                 <th className={styles.th} scope="col">ФИО</th>
-                <th className={styles.th} scope="col">Email</th>
                 <th className={styles.th} scope="col">Действие</th>
               </tr>
             </thead>
@@ -74,20 +73,9 @@ export function ParticipantTable({
                       type="text"
                       value={participant.name}
                       onChange={(event) => onUpdate(participant.id, { name: event.target.value })}
-                      placeholder="Иванов Иван"
+                      placeholder={participant.email || 'Иванов Иван'}
                       disabled={disabled}
                       aria-label={`ФИО участника #${index + 1}`}
-                    />
-                  </td>
-                  <td className={styles.td}>
-                    <input
-                      className={styles.input}
-                      type="email"
-                      value={participant.email}
-                      onChange={(event) => onUpdate(participant.id, { email: event.target.value })}
-                      placeholder="ivan@example.com"
-                      disabled={disabled}
-                      aria-label={`Email участника #${index + 1}`}
                     />
                   </td>
                   <td className={styles.td}>

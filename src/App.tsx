@@ -53,7 +53,7 @@ export function App() {
           <div className={styles.column}>
             <section className={styles.card} aria-labelledby="wheel-title">
               <h2 id="wheel-title" className={styles.cardTitle}>
-                Колесо выбора
+                3. Крути колесо
               </h2>
 
               <Wheel

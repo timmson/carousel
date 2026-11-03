@@ -107,7 +107,7 @@ describe('ParticipantTable rendering', () => {
       />,
     );
 
-    expect((html.match(/disabled=""/g) ?? []).length).toBeGreaterThanOrEqual(8);
+    expect((html.match(/disabled=""/g) ?? []).length).toBeGreaterThanOrEqual(6);
   });
 
   it('shows instructions when the list is empty', () => {

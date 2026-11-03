@@ -1,7 +1,7 @@
 .stage {
   position: relative;
   width: 100%;
-  max-width: 460px;
+  max-width: 620px;
   margin-inline: auto;
   display: grid;
   place-items: center;

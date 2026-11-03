@@ -8,7 +8,7 @@ export function Header() {
       </div>
       <h1 className={styles.title}>Кто ведёт протокол?</h1>
       <p className={styles.subtitle}>
-        Справедливый выбор ответственного за договорённости на встрече
+        Три простых шага для выбора протоколиста
       </p>
     </header>
   );
