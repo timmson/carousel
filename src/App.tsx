@@ -6,6 +6,7 @@ import { Wheel } from './components/Wheel';
 import { ResultCard } from './components/ResultCard';
 import { useParticipants } from './hooks/useParticipants';
 import { useSpin } from './hooks/useSpin';
+import { MsgDropper } from './components/MsgDropper';
 import styles from './App.module.css';
 
 export function App() {
@@ -38,6 +39,8 @@ export function App() {
         <div className={styles.layout}>
           <div className={styles.column}>
             <ParticipantInput text={text} setText={setText} onLoad={load} disabled={isSpinning} />
+            
+            <MsgDropper onParticipants={load} />
           </div>
 
           <div className={styles.column}>
