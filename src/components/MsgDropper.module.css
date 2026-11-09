@@ -1,0 +1,14 @@
+.dropper {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.error {
+  margin-top: 0.5rem;
+  color: red;
+  font-size: 12px;
+}
