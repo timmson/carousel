@@ -20,15 +20,33 @@ function plural(count: number, one: string, few: string, many: string): string {
   return many;
 }
 
-function handleFiles(
-  files: FileList,
-  onParsed: (p: ParsedParticipant[]) => void,
-  onError: (e: string) => void,
-) {
-  for (const file of Array.from(files)) {
-    if (!file.name.toLowerCase().endsWith('.msg')) continue;
-    file.arrayBuffer().then((buffer) => {
-      import('@npeersab/msgreader').then(async ({ MsgReader }) => {
+/** Имена писем из Outlook длинные и ломают одну строку статуса — срезаем середину. */
+function truncateFileName(name: string, maxLength = 34): string {
+  if (name.length <= maxLength) return name;
+  const head = Math.ceil((maxLength - 1) / 2);
+  const tail = Math.floor((maxLength - 1) / 2);
+  return `${name.slice(0, head)}…${name.slice(name.length - tail)}`;
+}
+
+interface FileHandlers {
+  onParsed: (p: ParsedParticipant[]) => void;
+  onError: (e: string) => void;
+  /** Вызывается перед разбором файла: показываем «Обработка», пока идёт тяжёлый парсинг OLE. */
+  onBegin: (fileName: string) => void;
+  /** Guaranteed to run for every begun file, so the counter always unwinds. */
+  onSettled: () => void;
+}
+
+function handleFiles(files: FileList, handlers: FileHandlers) {
+  const msgFiles = Array.from(files).filter((file) => file.name.toLowerCase().endsWith('.msg'));
+  if (msgFiles.length === 0) return;
+
+  for (const file of msgFiles) {
+    handlers.onBegin(file.name);
+    file
+      .arrayBuffer()
+      .then(async (buffer) => {
+        const { MsgReader } = await import('@npeersab/msgreader');
         const reader = new MsgReader(new Uint8Array(buffer));
         const { recipients } = reader.getFileData();
 
@@ -42,15 +60,16 @@ function handleFiles(
           .filter((p): p is ParsedParticipant => p !== null);
 
         if (parsed.length === 0) {
-          onError('В файле не найдено ни одного адресата.');
+          handlers.onError('В файле не найдено ни одного адресата.');
           return;
         }
 
-        onParsed(parsed);
-      }).catch((e) => {
-        onError(e instanceof Error ? e.message : 'Ошибка при чтении .msg файла');
-      });
-    });
+        handlers.onParsed(parsed);
+      })
+      .catch((e) => {
+        handlers.onError(e instanceof Error ? e.message : 'Ошибка при чтении .msg файла');
+      })
+      .finally(() => handlers.onSettled());
   }
 }
 
@@ -58,6 +77,9 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
   const [feedback, setFeedback] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  // Считаем файлы, а не булев флаг: в одну зону можно бросить несколько .msg сразу,
+  // и статус должен держаться, пока не разобран последний.
+  const [pending, setPending] = useState<string[]>([]);
 
   const handleLoad = useCallback(() => {
     const parsed = parseParticipants(text);
@@ -76,10 +98,24 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragOver(false);
-      handleFiles(e.dataTransfer.files, onLoad, setError);
+      setError(null);
+      setFeedback(null);
+      handleFiles(e.dataTransfer.files, {
+        onParsed: onLoad,
+        onError: setError,
+        onBegin: (fileName) => setPending((prev) => [...prev, fileName]),
+        onSettled: () => setPending((prev) => prev.slice(1)),
+      });
     },
     [onLoad],
   );
+
+  const processingLabel =
+    pending.length === 0
+      ? null
+      : pending.length === 1
+        ? `Обработка: ${truncateFileName(pending[0])}`
+        : `Обработка файлов: ${pending.length}`;
 
   return (
     <section className={styles.card} aria-labelledby="participants-input-title">
@@ -130,7 +166,9 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
       ) : null}
 
       <div
-        className={`${styles.dropZone}${isDragOver ? ` ${styles.dragOver}` : ''}`}
+        className={`${styles.dropZone}${isDragOver ? ` ${styles.dragOver}` : ''}${
+          processingLabel ? ` ${styles.busy}` : ''
+        }`}
         onDragOver={(e) => {
           e.preventDefault();
           setIsDragOver(true);
@@ -138,9 +176,16 @@ export function ParticipantInput({ text, setText, onLoad, disabled }: Participan
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
       >
-        <p className={styles.dropHint}>
-          или просто перенеси файл письма или встречи сюда
-        </p>
+        {processingLabel ? (
+          <p className={styles.dropStatus} role="status" aria-live="polite">
+            <span className={styles.spinner} aria-hidden="true" />
+            {processingLabel}
+          </p>
+        ) : (
+          <p className={styles.dropHint}>
+            или просто перенеси файл письма или встречи сюда
+          </p>
+        )}
         {error && <p className={styles.dropError} role="alert">{error}</p>}
       </div>
     </section>

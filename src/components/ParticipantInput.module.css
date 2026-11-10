@@ -112,6 +112,47 @@
   background: #eef2ff;
 }
 
+/* ── Состояние, когда файл обрабатывается ── */
+
+.dropZone.busy {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  opacity: 0.9;
+}
+
+.dropStatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.92rem;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+@keyframes spin-dot {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(79, 70, 229, 0.25);
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: spin-dot 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    border-top-color: rgba(79, 70, 229, 0.55);
+  }
+}
+
 .dropHint {
   margin: 0;
   font-size: 0.92rem;
